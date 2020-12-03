@@ -27,6 +27,8 @@ CREATE TABLE reviews (
   PRIMARY KEY (reviews_id),
   FOREIGN KEY (ratings_id)
     REFERENCES ratings(ratings_id)
+    -- ON DELETE CASCADE
+    -- [ ON UPDATE { NO ACTION | CASCADE | SET NULL | SET DEFAULT} ] -- DOES THIS WORK?
 );
 
 -- INSERT INTO ratings (cleanliness, communication, checkin, accuracy, location, value) VALUES (4.4, 3.6, 2.4, 5.0, 3.4, 2.2);
@@ -35,11 +37,11 @@ CREATE TABLE reviews (
 
 -- TO SEED THE DATABASE
   -- cd into the Customer-Reviews-Service folder
-  -- run the code: mysql -u root < database/schema.sql
+  -- run the code: mysql -u sammy < database/schema.sql
 
 -- TO VIEW THE WHOLE DATABASE BY LISTING
   -- run in the terminal:
-  -- mysql -u root
+  -- mysql -u sammy
   -- USE beartnt_reviews
   -- SELECT * FROM ratings
   -- INNER JOIN reviews

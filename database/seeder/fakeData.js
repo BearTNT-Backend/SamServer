@@ -138,7 +138,7 @@ const createAListing = () => {
 
   // CREATES REVIEWS
   var reviews = [];
-  reviews;
+  reviews; // huh, isn't this redundant?
   var numberOfReviews = randomNumberBetween(3, 15);
   var pictures = listShuffle(profilePics);
   var classNames = listShuffle(names);
@@ -234,6 +234,7 @@ const writeToCsv = () =>{
     });
 };
 
+console.log('ABOUT TO WRITE TO CSV');
 writeToCsv();
 
 /*
@@ -244,17 +245,34 @@ READ CVS FILES, QUERY TO DATABASE
 
 // FUNCTION TO LOAD MYSQL
 const downloadIntoDatabase = (tableName, data) => {
+  // console.log(tableName);
+  console.log('heres the datatype: ' + typeof data[0]);
+  console.log('is it an array?' + Array.isArray(data[0]));
+  console.log('HERES THE DATA AT START OF DOWNLOAD: ' + data[0][0]);
   var queryString;
   if (tableName === 'reviews') {
+    console.log('it was a review');
     queryString = `INSERT INTO ${tableName} (name, date, reviewBody, profilePic, ratings_id) VALUES ?`;
   } else {
+    console.log('it was a rating');
     queryString = `INSERT INTO ${tableName} (average, cleanliness, communication, checkin, accuracy, location, value, ratings_id) VALUES ?`;
   }
-  return new Promise((resolve, reject) => {
-    db.con.query(queryString, [data], (err, res) => {
-      err ? reject(err) : resolve(console.log(`wahoo ${tableName} filled`));
-    });
+  db.con.query(queryString, [data], (err, res) => {
+    console.log('this is the err: ' + err);
+    console.log('this is the result: ' + res);
   });
+  // return new Promise((resolve, reject) => {
+  //   console.log('did I make it here at least?');
+  //   debugger;
+  //   db.con.query(queryString, data, (err, res) => {
+  //     console.log('its the error: ' + err);
+  //     console.log('its the result: ' + res);
+  //     db.con.end();
+  //     err ? reject(err) : resolve(console.log(`wahoo ${tableName} filled`));
+  //   });
+  // }).catch(err => {
+  //   console.log('promise failed to deliver with: ' + err);
+  // });
 };
 
 //function to read csv files
@@ -276,10 +294,13 @@ var readCsvFile = (stream, dataStorage, table) => {
     .on('end', () => {
       //REMOVES THE FIRST LINE OF FILE(HEADER)
       dataStorage.shift();
+      console.log('about to download');
       downloadIntoDatabase(table, dataStorage);
+      console.log('after the download?');
     });
   stream.pipe(csvStream);
 };
 
+console.log('IM ABOUT TO READ CSV FILES FOR RATINGS AND REVIEWS!');
 readCsvFile(ratingsStream, ratingsData, 'ratings');
 readCsvFile(reviewsStream, reviewsData, 'reviews');
