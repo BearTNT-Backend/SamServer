@@ -53,7 +53,7 @@ const updateReview = (params, id, callback) => {
 };
 
 // update rating function
-const updateReview = (params, id, callback) => {
+const updateRatings = (params, id, callback) => {
   id = id || 5;
   var updateSnippet = '';
   for (let key of params) {
@@ -82,6 +82,8 @@ module.exports = {
   postDataToRatings,
   postDataToReviews,
   getAllDataFromTable,
+  updateReview,
+  updateRatings,
   deleteReview,
   con
 };
