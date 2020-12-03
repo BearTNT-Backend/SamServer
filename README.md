@@ -1,3 +1,11 @@
+# API Routes
+POST -- '/api/reviews-module/reviews/:id' -- posts a review and set of ratings to the database
+GET -- '/api/reviews-module/ratings/:id' -- fetches all ratings for the current product
+GET -- '/api/reviews-module/reviews/:id' -- fetches all reviews for the current product
+PUT -- '/api/reviews-module/reviews/:id' -- updates information on a given review (except for ratings)
+PUT -- '/api/reviews-module/ratings/:id' -- updates ratings information for a particular review
+DELETE -- '/api/reviews-module/reviews/:id' -- delete a review
+
 # Project Name
 
 > Reviews module modeled after airbnb
