@@ -1,9 +1,11 @@
+// perhaps there are version problems with node between global and repo specific.
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('../database/db.js');
 const path = require('path');
 const app = express();
-const port = 3306;
+const port = 3000;
 
 
 app.use(bodyParser.json());
@@ -11,7 +13,6 @@ app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // a CREATE route for reviews (that also includes ratings by neccesity)
-// refactoring to async await
 app.post('/api/reviews-module/reviews/:id', (req, res) => {
   const reqData = req.data.body;
   let review;
@@ -26,12 +27,13 @@ app.post('/api/reviews-module/reviews/:id', (req, res) => {
           console.log(err);
         } else {
           ratings = results;
+          db.con.end();
           res.send(review, ratings);
         }
-      }
+      });
     }
-  }
-)};
+  });
+});
 
 // this is a READ route for reviews
 app.get('/api/reviews-module/reviews/:id', (req, res) => {

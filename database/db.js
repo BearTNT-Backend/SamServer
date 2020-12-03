@@ -1,23 +1,31 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const con = mysql.createConnection({
   host: 'localhost',
+  port: '3306',
   user: 'sammy',
   password: 'password',
   database: 'beartnt_reviews'
 });
+console.log('just about to connect!');
 
 con.connect(err => {
-  err ? console.error(err) : console.log('Connected to the database!!');
+  console.log('am i gonna connect or nooot?');
+  err ? console.log(err) : console.log('Connected to the database!!');
 });
 
 const postDataToRatings = (params, id, callback) => {
   id = id || 5;
   var query = `INSERT INTO ratings VALUES (${params.average}, ${params.cleanliness}, ${params.communication}, ${params.checkin}, ${params.accuracy}, ${params.location}, ${params.value})`;
   con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+    if (err) {
+      callback(err);
+    } else {
+      con.end();
+      callback(null, res);
+    }
   });
-}
+};
 
 const postDataToReviews = (params, id, callback) => {
   id = id || 5;
@@ -25,7 +33,7 @@ const postDataToReviews = (params, id, callback) => {
   con.query(query, (err, res) => {
     err ? callback(err) : callback(null, res);
   });
-}
+};
 
 const getAllDataFromTable = (table, id, callback) => {
   id = id || 5;
@@ -77,6 +85,7 @@ const deleteReview = (id, callback) => {
     err ? callback(err) : callback(null, res);
   });
 };
+
 
 module.exports = {
   postDataToRatings,
