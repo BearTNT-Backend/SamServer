@@ -162,15 +162,22 @@ const createReviews = () => {
   return currentReviews;
 };
 
+let reviewsList = [];
+let reviewIndex = 0;
 const createAListing = () => {
+  reviewsList = [];
+  reviewIndex = 0;
   currentReviewCount = randomNumberBetween(3, 15);
-  allListings[nextIndex] = {
-    userName: listShuffle(names)[currentReviewCount], //faker.name.findName();
-    picUrl: listShuffle(profilePics)[currentReviewCount],
-    date: `${faker.date.month()} ${randomNumberBetween(2008, 2020)}`,
-    paragraph: randomParagraph(sentences), //faker.lorem.paragraph();
-    reviews: createReviews()
-  };
+  for (reviewIndex; reviewIndex < currentReviewCount; reviewIndex++) {
+    reviewsList.push({
+      userName: listShuffle(names)[currentReviewCount], //faker.name.findName();
+      picUrl: listShuffle(profilePics)[currentReviewCount],
+      date: `${faker.date.month()} ${randomNumberBetween(2008, 2020)}`,
+      paragraph: randomParagraph(sentences), //faker.lorem.paragraph();
+      reviews: createReviews()
+    });
+  }
+  allListings[nextIndex] = reviewsList;
   nextIndex++;
 };
 
