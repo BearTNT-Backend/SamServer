@@ -1,3 +1,11 @@
+// read thoroughly the npm docs for createRecordWriter
+// segment into various things:
+// must be fully aware of npm package aspects (no laziness)
+// function inputs and outputs. how is it interacted with?
+// after that:
+// (maybe even make a little js file for csv file)
+// I don't HAVE to use the csvWriter. I can choose whatever.
+
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/myMongoDb', {useNewUrlParser: true});
 
@@ -21,9 +29,9 @@ const reviewSchema = new mongoose.Schema({
 
 const Review = mongoose.model('Review', reviewSchema);
 
-const fakeReview = new Review({ name: 'Samanthathathathat', date: 'whatever', reviewBody: 'I hated this place.', profilePic: 'someanimepic.png', ratings: [{average: '3', cleanliness: '3', communication: '3', checkin: '3', accuracy: '3', location: '3', value: '3' }] });
+// const fakeReview = new Review({ name: 'Samanthathathathat', date: 'whatever', reviewBody: 'I hated this place.', profilePic: 'someanimepic.png', ratings: [{average: '3', cleanliness: '3', communication: '3', checkin: '3', accuracy: '3', location: '3', value: '3' }] });
 
-const fakeReview2 = new Review({ name: 'Evil Sam', date: 'evil whatever', reviewBody: 'I loved this place.', profilePic: 'someanimepic.png', ratings: [{average: '3', cleanliness: '3', communication: '3', checkin: '3', accuracy: '3', location: '3', value: '3' }] });
+// const fakeReview2 = new Review({ name: 'Evil Sam', date: 'evil whatever', reviewBody: 'I loved this place.', profilePic: 'someanimepic.png', ratings: [{average: '3', cleanliness: '3', communication: '3', checkin: '3', accuracy: '3', location: '3', value: '3' }] });
 
 // fakeReview.save((err) => {
 //   if (err) {
@@ -33,14 +41,33 @@ const fakeReview2 = new Review({ name: 'Evil Sam', date: 'evil whatever', review
 //   }
 // });
 
-const postReviews = (callback, ...reviews) => {
+const postReviews = (callback, reviews) => {
+  // console.log('heres the reviews object: ' + reviews);
+  // console.log('is reviews an array? ' + Array.isArray(reviews));
+  // console.log('the type of reviews: ' + typeof reviews);
+  // for (let review of reviews) {
+  //   console.log('heres the review: ' + JSON.stringify(review));
+  //   for (let item of review) {
+
+  //     console.log('heres a review item: ' + item);
+  //   }
+  // }
   // inputs I need: an object representing the various fields and the associated values
-  Review.insertMany(reviews, (err, res) => {
-    if (err) {
+  Review.insertMany(reviews)
+    .then(res => {
+      // console.log('heres the result: ' + res);
+      // console.log('Data inserted');
+      callback(null, res);
+    }).catch(err => {
       console.log(err);
-    }
-    callback(null, res);
-  });
+    });
+  // console.log('the length of the reviews passed to insertMany: ' + reviews.length);
+  // console.log('the type of the reviews: ' + typeof reviews);
+  // console.log('the type of the first item in reviews: ' + typeof reviews[0]);
+  // console.log('is the first item in reviews an array? ' + Array.isArray(reviews[0]));
+  // console.log('the first item in reviews: ' + reviews[0]);
+  // console.log('the first item in the first item in reviews: ' + reviews[0][0]);
+  // console.log('is reviews an array? ' + Array.isArray(reviews));
 };
 
 // postReviews((err, res) => {
@@ -124,9 +151,11 @@ const deleteReview = (id, callback) => {
 
 
 module.exports = {
+  postReviews,
   postDataToRatings,
   getAllDataFromTable,
   updateReview,
   updateRatings,
   deleteReview,
+  Review
 };
