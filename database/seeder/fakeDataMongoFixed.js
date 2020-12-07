@@ -145,12 +145,12 @@ var profilePics = [
 
 let allListings = {};
 let nextIndex = 0;
-let currentReviews = [];
+let currentRatings = [];
 let currentReviewCount = 0;
 
-const createReviews = () => {
-  currentReviews = [];
-  currentReviews.push({
+const createRatings = () => {
+  currentRatings = [];
+  currentRatings.push({
     average: randomNumberBetween(1, 5, true),
     cleanliness: randomNumberBetween(1, 5, true),
     communication: randomNumberBetween(1, 5, true),
@@ -159,7 +159,7 @@ const createReviews = () => {
     location: randomNumberBetween(1, 5, true),
     value: randomNumberBetween(1, 5, true)
   });
-  return currentReviews;
+  return currentRatings;
 };
 
 let reviewsList = [];
@@ -174,7 +174,7 @@ const createAListing = () => {
       picUrl: listShuffle(profilePics)[currentReviewCount],
       date: `${faker.date.month()} ${randomNumberBetween(2008, 2020)}`,
       paragraph: randomParagraph(sentences), //faker.lorem.paragraph();
-      reviews: createReviews()
+      reviews: createRatings()
     });
   }
   allListings[nextIndex] = reviewsList;
@@ -354,10 +354,10 @@ const writeTenMillionItems = (cb) => {
       console.log(nextIndex);
       if (nextIndex === 10000001) {
         createAListing();
-        writeStream.write(`{"${nextIndex}": ${JSON.stringify(allListings[nextIndex - 1])}}`, cb);
+        writeStream.write(`{"reviews": ${JSON.stringify(allListings[nextIndex - 1])}}`, cb);
       } else {
         createAListing();
-        dataIsLeft = writeStream.write(`{"${nextIndex}": ${JSON.stringify(allListings[nextIndex - 1])}}`);
+        dataIsLeft = writeStream.write(`{"reviews": ${JSON.stringify(allListings[nextIndex - 1])}}`);
         delete allListings[nextIndex - 1];
       }
     } while (nextIndex < 10000001 && dataIsLeft);
