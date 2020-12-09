@@ -1,25 +1,26 @@
 \c listdb
 
 CREATE TABLE IF NOT EXISTS ratings (
-  ratings_id bigserial,
+  ratingsId bigserial,
   average VARCHAR (4) NOT NULL,
   cleanliness VARCHAR (4) NOT NULL,
   communication VARCHAR (4) NOT NULL,
   checkin VARCHAR (4) NOT NULL,
   location VARCHAR (4) NOT NULL,
   value VARCHAR (4) NOT NULL,
-  PRIMARY KEY (ratings_id)
+  PRIMARY KEY (ratingsId)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
-  reviews_id bigserial,
+  reviewsId bigserial,
+  listingId bigserial,
   name VARCHAR (30) NOT NULL,
   date VARCHAR (30) NOT NULL,
   reviewBody VARCHAR (1000) NOT NULL,
   profilePic VARCHAR (200),
-  ratings_id BIGINT,
-  PRIMARY KEY (reviews_id),
-  FOREIGN KEY (ratings_id) REFERENCES ratings(ratings_id)
+  ratingsId BIGINT,
+  PRIMARY KEY (reviewsId),
+  FOREIGN KEY (ratingsId) REFERENCES ratings(ratingsId)
 );
     -- ON DELETE CASCADE
     -- [ ON UPDATE { NO ACTION | CASCADE | SET NULL | SET DEFAULT} ] -- DOES THIS WORK?
