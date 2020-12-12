@@ -9,7 +9,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ratings: [],
+      ratings: ['4', '5', '3', '4', '5', '3', '4'],
       reviews: [],
       modalReviews: [],
       searchBarEntry: '',
@@ -31,6 +31,7 @@ class App extends React.Component {
 
   componentDidMount () {
     //LAST NUMBER OF URL IS ID
+    console.log('App has mounted.');
     var id = window.location.pathname.split('/');
     id = id[id.length - 1];
     if (id.length === 0) {
@@ -39,15 +40,21 @@ class App extends React.Component {
 
     axios.get(`/api/reviews-module/reviews/${id}`)
       .then(data => {
+        console.log('Data was retrieved.');
+        console.log('what is data.data? ' + JSON.stringify(data.data));
         this.setState({
-          reviews: data.data,
-          modalReviews: data.data
+          reviews: data.data.rows,
+          modalReviews: data.data.rows,
         });
-        return axios.get(`/api/reviews-module/ratings/${id}`);
-      })
-      .then(data => {
-        this.setState({
-          ratings: data.data[0]
+      }).then(() => {
+        console.log('heres the state of reviews right before axios request to ratings: ' + this.state.reviews);
+        axios.get(`/api/reviews-module/ratings/${this.state.reviews.map((review) => {
+          console.log('this is a single review in the state of reviews: ' + JSON.stringify(review));
+          return review.reviewsid;
+        }).toString()}`).then(data => {
+          this.setState({
+            ratings: data.data.ratings
+          });
         });
       })
       .catch(err => {
@@ -100,7 +107,7 @@ class App extends React.Component {
 
   //INVOKED UPON ENTER UPDATES STATE OF POPUP REVIEWS
   search (e) {
-    console.log('e?', e.target.value)
+    console.log('e?', e.target.value);
     if (e.key === 'Enter') {
       // this.resetSearch();
       var newProps = [];
@@ -142,6 +149,7 @@ class App extends React.Component {
   */
 
   render () {
+    console.log('the state of ratings: ' + JSON.stringify(this.state.ratings));
 
     return (
       <div className='reviews-margin-body'>

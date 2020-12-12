@@ -16,7 +16,7 @@ con.connect(err => {
 
 const postDataToRatings = (params, id, callback) => {
   id = id || 5;
-  var query = `INSERT INTO ratings VALUES (${params.average}, ${params.cleanliness}, ${params.communication}, ${params.checkin}, ${params.accuracy}, ${params.location}, ${params.value})`;
+  var query = `INSERT INTO ratings VALUES (${params}, ${params.cleanliness}, ${params.communication}, ${params.checkin}, ${params.accuracy}, ${params.location}, ${params.value})`;
   con.query(query, (err, res) => {
     if (err) {
       callback(err);
@@ -37,7 +37,7 @@ const postDataToReviews = (params, id, callback) => {
 
 const getAllDataFromTable = (table, id, callback) => {
   id = id || 5;
-  var query = `SELECT * FROM ${table} WHERE ratings_id = ${id}`;
+  var query = `SELECT * FROM ${table} WHERE ratingsId = ${id}`;
   con.query(query, (err, res) => {
     err ? callback(err) : callback(null, res);
   });
@@ -54,7 +54,7 @@ const updateReview = (params, id, callback) => {
   var query = `UPDATE [LOW_PRIORITY] [IGNORE] reviews
                SET
                   ${updateSnippet}
-               WHERE ratings_id = ${id}`;
+               WHERE ratingsId = ${id}`;
   con.query(query, (err, res) => {
     err ? callback(err) : callback(null, res);
   });
@@ -70,7 +70,7 @@ const updateRatings = (params, id, callback) => {
   var query = `UPDATE [LOW_PRIORITY] [IGNORE] ratings
                SET
                   ${updateSnippet}
-               WHERE ratings_id = ${id}`;
+               WHERE ratingsId = ${id}`;
   con.query(query, (err, res) => {
     err ? callback(err) : callback(null, res);
   });
@@ -80,7 +80,7 @@ const updateRatings = (params, id, callback) => {
 const deleteReview = (id, callback) => {
   id = id || 5;
   var query = `DELETE FROM reviews
-               WHERE ratings_id = ${id}`; // does this handle foreign keys? probably not
+               WHERE ratingsId = ${id}`; // does this handle foreign keys? probably not
   con.query(query, (err, res) => {
     err ? callback(err) : callback(null, res);
   });

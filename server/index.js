@@ -1,19 +1,28 @@
+//LOAD BALANCE WITH NGINX
+// make that stress test to whatever endpoint will give it the html and javascript (via index probably)
+// to clone service, base the copy on an IMAGE of the original
+// research loaderio -- tool for testing full process
+
 // perhaps there are version problems with node between global and repo specific.
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('../database/db.js');
+const db = require('../database/PostgresDb.js');
 const path = require('path');
 const app = express();
 const port = 3000;
 
+console.log(path.join(__dirname, '../public'));
+
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../public')));
 
 // a CREATE route for reviews (that also includes ratings by neccesity)
+//REFACTOR TO USE POSTREVIEW INSTEAD!!!!
 app.post('/api/reviews-module/reviews/:id', (req, res) => {
+  console.log('About to post review');
   const reqData = req.data.body;
   let review;
   let ratings;
@@ -37,14 +46,19 @@ app.post('/api/reviews-module/reviews/:id', (req, res) => {
 
 // this is a READ route for reviews
 app.get('/api/reviews-module/reviews/:id', (req, res) => {
-  db.getAllDataFromTable('reviews', req.params.id, (err, results) => {
+  console.log('About to get all reviews');
+  console.log('wonder what req.params.id really is...' + typeof req.params.id);
+  db.getReviews(req.params.id, (err, results) => {
+    console.log('Im in the callback of getAllData!');
     err ? console.log(err) : res.send(results);
   });
 });
 
 // this is a READ route for ratings
-app.get('/api/reviews-module/ratings/:id', (req, res) => {
-  db.getAllDataFromTable('ratings', req.params.id, (err, results) => {
+app.get('/api/reviews-module/ratings/:ids', (req, res) => {
+  console.log('About to get a set of ratings');
+  console.log('what is req.params.ids? ' + req.params.ids);
+  db.getRatings(req.params.ids, (err, results) => {
     err ? console.log(err) : res.send(results);
   });
 });
@@ -69,12 +83,6 @@ app.delete('/api/reviews-module/reviews/:id', (req, res) => {
     err ? console.log(err) : res.send(results);
   });
 });
-
-
-// USE A WRITE STREAM IN THE MIDDLE OF THE PROCESS SO I DON'T NEED TO HOLD THEM ALL IN MEMORY!!!
-// ALL IN ONE STEP
-// PUSH IT AS A CSV WITH WRITESTREAM
-// DON'T USE LIBRARY FOR CSV CREATION
 
 // this is just fetching the content as a whole based on the property
 app.get('/:id', (req, res) => {

@@ -10,7 +10,7 @@ const SingleReview = (props) => {
 
   //REMOVES READMORE BUTTON IN POPUP AND SHORT PARAGRAPHS
   useDidMount( () => {
-    if (props.review.reviewBody.length < 100) {
+    if (props.review.reviewbody.length < 100) {
       toggleShow();
     }
   });
@@ -28,8 +28,9 @@ const SingleReview = (props) => {
         </span>
       </div>
       {/* THE REVIEW BODY FOR THE MAIN PAGE */}
-      {!props.isModal &&<p className='review-paragraph padding-right-review'>
-        {props.readMore(props.review.reviewBody)[0]}
+      {!props.isModal && <p className='review-paragraph padding-right-review'>
+        {console.log('Heres is props.review: ' + JSON.stringify(props.review.reviewbody))}
+        {props.readMore(props.review.reviewbody)[0]}
         {!show &&
           <span>...
             <span className="read-more-btn" onClick={toggleShow}>read more</span>
@@ -37,7 +38,7 @@ const SingleReview = (props) => {
         }
         {show &&
           <span className="more">
-            {props.readMore(props.review.reviewBody)[1]}
+            {props.readMore(props.review.reviewbody)[1]}
           </span>
         }
       </p>}
@@ -46,7 +47,7 @@ const SingleReview = (props) => {
         className='review-paragraph'
         highlightClassName='review-paragraph'
         searchWords={[props.wordsToHighlight]}
-        textToHighlight={props.review.reviewBody}
+        textToHighlight={props.review.reviewbody}
       />}
     </div>
   );

@@ -94,19 +94,14 @@
 const pg = require('pg');
 const client = new pg.Client({
   user: 'samgoldie',
-  host: localhost,
-  database: listdb,
+  host: 'localhost',
+  database: 'listdb',
   port: 5432
 });
-client.connect();
 
-
-client.query('SELECTION STRING', (err, res) => {
-  if (err) {
-    console.log(err);
-  }
-
-});
+client.connect(() => {
+  console.log('connected to postgres db');
+}); // callback here??
 
 // const { Pool, Client } = require('pg')
 // const pool = new Pool({
@@ -133,28 +128,28 @@ client.query('SELECTION STRING', (err, res) => {
 //   client.end()
 // })
 
-const con = mysql.createConnection({
-  host: 'localhost',
-  port: '3306',
-  user: 'sammy',
-  password: 'password',
-  database: 'beartnt_reviews'
-});
-console.log('just about to connect!');
+// CREATE TABLE IF NOT EXISTS ratings (
+//   ratingsId bigserial,
+//   average VARCHAR (4) NOT NULL,
+//   cleanliness VARCHAR (4) NOT NULL,
+//   communication VARCHAR (4) NOT NULL,
+//   checkin VARCHAR (4) NOT NULL,
+//   location VARCHAR (4) NOT NULL,
+//   value VARCHAR (4) NOT NULL,
+//   PRIMARY KEY (ratingsId)
+// );
 
-con.connect(err => {
-  console.log('am i gonna connect or nooot?');
-  err ? console.log(err) : console.log('Connected to the database!!');
-});
+// I HAVE TO REFACTOR OUT ACCURACY ATTRIBUTE ANYWHERE IT OCCURS IN MY CODE
 
 const postDataToRatings = (params, id, callback) => {
+  console.log('HERE ARE THE PARAMS TO POST DATA');
   id = id || 5;
-  var query = `INSERT INTO ratings VALUES (${params.average}, ${params.cleanliness}, ${params.communication}, ${params.checkin}, ${params.accuracy}, ${params.location}, ${params.value})`;
-  con.query(query, (err, res) => {
+  var query = `INSERT INTO ratings () VALUES (${params.average}, ${params.cleanliness}, ${params.communication}, ${params.checkin}, ${params.accuracy}, ${params.location}, ${params.value})`;
+  client.query(query, (err, res) => {
     if (err) {
       callback(err);
     } else {
-      con.end();
+      client.close();
       callback(null, res);
     }
   });
@@ -163,18 +158,45 @@ const postDataToRatings = (params, id, callback) => {
 const postDataToReviews = (params, id, callback) => {
   id = id || 5;
   var query = `INSERT INTO reviews VALUES (${params.name}, ${params.date}, ${params.reviewBody}, ${params.profilePic}, ${id})`;
-  con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+  client.query(query, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      client.close();
+      callback(null, res);
+    }
   });
 };
 
-const getAllDataFromTable = (table, id, callback) => {
-  id = id || 5;
-  var query = `SELECT * FROM ${table} WHERE ratings_id = ${id}`;
-  con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+const getRatings = (allIds, callback) => {
+  console.log('HERES THE allIds provided: ' + allIds);
+  allIds = allIds || '"1", "2", "3", "4", "5", "6", "7"';
+  console.log('here i am in getRatings!');
+  var query = `SELECT * FROM ratings WHERE ratingsId IN (${allIds}) AND ratingsId < 10000;`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
+  console.log('heres the rating query Im about to send: ' + query);
+  client.query(query, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, res);
+    }
   });
 };
+
+const getReviews = (id, callback) => {
+  id = id || '5';
+  var query = `SELECT * FROM reviews WHERE listingid = ${id} AND reviewsId < 10000;`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
+  console.log('heres the review query Im about to send: ' + query);
+  client.query(query, (err, res) => {
+    console.log('here i am in the callback of the query to client');
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, res);
+    }
+  });
+};
+
 // the connection doesn't seem to close, which is odd
 
 // update review function
@@ -187,35 +209,54 @@ const updateReview = (params, id, callback) => {
   var query = `UPDATE [LOW_PRIORITY] [IGNORE] reviews
                SET
                   ${updateSnippet}
-               WHERE ratings_id = ${id}`;
-  con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+               WHERE ratingsId = ${id}`;
+  client.query(query, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      client.close();
+      callback(null, res);
+    }
   });
 };
 
 // update rating function
 const updateRatings = (params, id, callback) => {
   id = id || 5;
-  var updateSnippet = '';
-  for (let key of params) {
-    updateSnippet += `${key}: ${params[key]},`;
-  }
+  var updateSnippet = params.accuracy;
+  // for (let key of params) {
+  //   updateSnippet += `${key}: ${params[key]},`;
+  // }
   var query = `UPDATE [LOW_PRIORITY] [IGNORE] ratings
                SET
                   ${updateSnippet}
-               WHERE ratings_id = ${id}`;
-  con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+               WHERE ratingsId = ${id}`;
+  client.query(query, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      client.close();
+      callback(null, res);
+    }
   });
 };
+
+// for (let i = 0; i < 78737721; i++) {
+//   updateRatings({'accuracy': (Math.random() * 4 + 1).toString()});
+// }
 
 // delete review function
 const deleteReview = (id, callback) => {
   id = id || 5;
   var query = `DELETE FROM reviews
-               WHERE ratings_id = ${id}`; // does this handle foreign keys? probably not
-  con.query(query, (err, res) => {
-    err ? callback(err) : callback(null, res);
+               WHERE ratingsId = ${id}`; // does this handle foreign keys? probably not
+  client.query(query, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      client.close();
+      callback(null, res);
+    }
   });
 };
 
@@ -223,9 +264,10 @@ const deleteReview = (id, callback) => {
 module.exports = {
   postDataToRatings,
   postDataToReviews,
-  getAllDataFromTable,
+  getReviews,
+  getRatings,
   updateReview,
   updateRatings,
   deleteReview,
-  con
+  client
 };

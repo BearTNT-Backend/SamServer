@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS ratings (
   cleanliness VARCHAR (4) NOT NULL,
   communication VARCHAR (4) NOT NULL,
   checkin VARCHAR (4) NOT NULL,
+  accuracy VARCHAR (4) NOT NULL,
   location VARCHAR (4) NOT NULL,
   value VARCHAR (4) NOT NULL,
   PRIMARY KEY (ratingsId)
