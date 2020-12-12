@@ -178,6 +178,7 @@ const getRatings = (allIds, callback) => {
     if (err) {
       callback(err);
     } else {
+      console.log('whats in the response to ratings request: ' + JSON.stringify(res));
       callback(null, res);
     }
   });
@@ -188,7 +189,7 @@ const getReviews = (id, callback) => {
   var query = `SELECT * FROM reviews WHERE listingid = ${id} AND reviewsId < 10000;`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
   console.log('heres the review query Im about to send: ' + query);
   client.query(query, (err, res) => {
-    console.log('here i am in the callback of the query to client');
+    console.log('whats in the response to reviews request: ' + JSON.stringify(res));
     if (err) {
       callback(err);
     } else {

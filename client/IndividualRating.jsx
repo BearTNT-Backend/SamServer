@@ -1,6 +1,7 @@
 import React from 'react';
 
 const IndividualRating = (props) => {
+  console.log('what are the props of individual rating: ' + JSON.stringify(props));
 
   return (
     <div className='individual-ratings-box'>
@@ -8,15 +9,16 @@ const IndividualRating = (props) => {
       </div>
       <div className='individual-score-bar'>
         <div className='individual-base-layer'>
-          <div style={props.percentageBar(props.rating.score)}></div>
+          <div style={props.percentageBar(props.rating.score.average)}></div>
         </div>
         <div></div>
       </div>
 
       <div className='individual-score'>
-        <small>&nbsp; &nbsp;{props.rating.score}</small>
+        <small>&nbsp; &nbsp;{props.rating.score.average}</small>
         <p hidden>test</p>
       </div>
+      {console.log('Made it to the end of IndividualRatings!')}
     </div>
   );
 

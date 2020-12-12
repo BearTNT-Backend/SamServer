@@ -77,6 +77,7 @@ const PopUpModal = (props) => {
           </div>
         </div>
       </Modal>
+      {console.log('Made it to the end of PopUpModal!')}
     </>
   );
 };
