@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: './client/index.jsx',
+  devtool: 'eval-source-map',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public')
@@ -18,7 +19,7 @@ module.exports = {
         test: /\.css$/i,
         loader: ['style-loader', 'css-loader']
       }
-    ]
+    ],
   }
-}
+};
 

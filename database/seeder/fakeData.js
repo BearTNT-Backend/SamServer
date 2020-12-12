@@ -257,7 +257,7 @@ const downloadIntoDatabase = (tableName, data) => {
     console.log('it was a rating');
     queryString = `INSERT INTO ${tableName} (average, cleanliness, communication, checkin, accuracy, location, value, ratings_id) VALUES ?`;
   }
-  db.con.query(queryString, [data], (err, res) => {
+  db.con.query(queryString, [data] (err, res) => {
     console.log('this is the err: ' + err);
     console.log('this is the result: ' + res);
   });

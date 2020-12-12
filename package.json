@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.5",
     "@rooks/use-did-mount": "^4.0.2",
@@ -33,6 +34,7 @@
     "faker": "^5.1.0",
     "fast-csv": "^4.3.5",
     "fs": "0.0.1-security",
+    "httperfjs": "^0.1.0",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.3",
     "mysql2": "^2.2.5",
@@ -46,6 +48,7 @@
     "react-dom": "^16.14.0",
     "react-highlight-words": "^0.16.0",
     "react-modal": "^3.11.2",
+    "regenerator": "^0.14.7",
     "seed": "^0.4.4",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.2.0",
