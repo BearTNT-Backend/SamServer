@@ -15,13 +15,14 @@ const SingleReview = (props) => {
       toggleShow();
     }
   });
+  console.log('HERE IS PROPS.REVIEW.PROFILEPIC: ' + props.review.profilepic);
 
   return (
     <div className='single-review-box'>
       <div className='review-pic-name-date-box'>
         <span className='profile-picture'>
           <p hidden>test</p>
-          <img className='profile-picture-shape' alt='profile-pic' src={props.review.profilePic} width='60px' height='60px'></img>
+          <img className='profile-picture-shape' alt='profile-pic' src={props.review.profilepic} width='60px' height='60px'></img>
         </span>
         <span className='review-name-date-box'>
           <p className='review-name'>{props.review.name}</p>
@@ -30,7 +31,7 @@ const SingleReview = (props) => {
       </div>
       {/* THE REVIEW BODY FOR THE MAIN PAGE */}
       {!props.isModal && <p className='review-paragraph padding-right-review'>
-        {console.log('Here is props.review: ' + JSON.stringify(props.review.reviewbody))}
+        {console.log('Here is props.review.reviewbody: ' + JSON.stringify(props.review.reviewbody))}
         {props.readMore(props.review.reviewbody)[0]}
         {!show &&
           <span>...
