@@ -15,9 +15,9 @@ CREATE TABLE IF NOT EXISTS ratings (
 CREATE TABLE IF NOT EXISTS reviews (
   reviewsId bigserial,
   listingId bigserial,
-  name VARCHAR (30) NOT NULL,
+  name VARCHAR (22) NOT NULL,
   date VARCHAR (30) NOT NULL,
-  reviewBody VARCHAR (1000) NOT NULL,
+  reviewBody VARCHAR (550) NOT NULL,
   profilePic VARCHAR (200),
   ratingsId BIGINT,
   PRIMARY KEY (reviewsId),
