@@ -8,7 +8,7 @@ const Ratings = (props) => {
       average: ''
     };
   }
-
+  // PERHAPS I SHOULD START HERE TOMORROW!!!!
   //LOCATES NAME AND RATINGS
   var arrOfRatings = [];
   for ( var key in props.ratings) {
@@ -18,9 +18,10 @@ const Ratings = (props) => {
   }
 
   console.log('HERE ARE PROPS IN RATINGS: ' + JSON.stringify(props));
+  console.log('here is props.ratings.average: ' + JSON.stringify(props.ratings[0].average)); // currently, this is a string like " 5" with a space first
   return (
     <div>
-      <h2 className='reviews-average'><span className='reviews-red-star'><i className="fas fa-paw"></i></span> {props.ratings.average}  ({props.numOfReviews} reviews)</h2>
+      <h2 className='reviews-average'><span className='reviews-red-star'><i className="fas fa-paw"></i></span> {props.ratings[0].average}  ({props.numOfReviews} reviews)</h2>
       <div className='ratings-box'>
         {arrOfRatings.map(rating => {
           return (
@@ -33,6 +34,7 @@ const Ratings = (props) => {
         })}
         <p hidden>test</p>
       </div>
+      {console.log('Made it to the end of Ratings!')}
     </div>
   );
 

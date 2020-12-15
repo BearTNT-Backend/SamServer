@@ -2,22 +2,22 @@
 
 CREATE TABLE IF NOT EXISTS ratings (
   ratingsId bigserial,
-  average VARCHAR (4) NOT NULL,
-  cleanliness VARCHAR (4) NOT NULL,
-  communication VARCHAR (4) NOT NULL,
-  checkin VARCHAR (4) NOT NULL,
-  accuracy VARCHAR (4) NOT NULL,
-  location VARCHAR (4) NOT NULL,
-  value VARCHAR (4) NOT NULL,
+  average VARCHAR (3) NOT NULL,
+  cleanliness VARCHAR (3) NOT NULL,
+  communication VARCHAR (3) NOT NULL,
+  checkin VARCHAR (3) NOT NULL,
+  accuracy VARCHAR (3) NOT NULL,
+  location VARCHAR (3) NOT NULL,
+  value VARCHAR (3) NOT NULL,
   PRIMARY KEY (ratingsId)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
   reviewsId bigserial,
   listingId bigserial,
-  name VARCHAR (30) NOT NULL,
+  name VARCHAR (22) NOT NULL,
   date VARCHAR (30) NOT NULL,
-  reviewBody VARCHAR (1000) NOT NULL,
+  reviewBody VARCHAR (360) NOT NULL,
   profilePic VARCHAR (200),
   ratingsId BIGINT,
   PRIMARY KEY (reviewsId),

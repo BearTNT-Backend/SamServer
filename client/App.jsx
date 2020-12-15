@@ -38,10 +38,12 @@ class App extends React.Component {
       id = 67;
     }
 
+    // I can maybe use react hooks to target only certain aspects of state changing
+
     axios.get(`/api/reviews-module/reviews/${id}`)
       .then(data => {
         console.log('Data was retrieved.');
-        console.log('what is data.data? ' + JSON.stringify(data.data));
+        console.log('whats in the response to the reviews request? ' + JSON.stringify(data.data.rows));
         this.setState({
           reviews: data.data.rows,
           modalReviews: data.data.rows,
@@ -52,8 +54,10 @@ class App extends React.Component {
           console.log('this is a single review in the state of reviews: ' + JSON.stringify(review));
           return review.reviewsid;
         }).toString()}`).then(data => {
+          console.log('whats in the response to the ratings request? ' + JSON.stringify(data.data.rows));
+          console.log(JSON.stringify(data.data.rows));
           this.setState({
-            ratings: data.data.ratings
+            ratings: data.data.rows
           });
         });
       })
@@ -179,7 +183,9 @@ class App extends React.Component {
             percentageBar={this.percentageBar}
             resetSearch={this.resetSearch}
           />
+          {console.log('Right after PopUpModal in App!')}
         </div>
+        {console.log('Made it to the end of App!')}
       </div>
     );
   }
