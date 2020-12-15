@@ -90,6 +90,7 @@
 // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
 // console.log(res.rows[0].message) // Hello world!
 // await client.end()
+const randomNumber = require('./seeder/fakeDataPg.js').randomNumberBetween;
 
 const pg = require('pg');
 const client = new pg.Client({
@@ -102,44 +103,6 @@ const client = new pg.Client({
 client.connect(() => {
   console.log('connected to postgres db');
 }); // callback here??
-
-// const { Pool, Client } = require('pg')
-// const pool = new Pool({
-//   user: 'dbuser',
-//   host: 'database.server.com',
-//   database: 'mydb',
-//   password: 'secretpassword',
-//   port: 3211,
-// })
-// pool.query('SELECT NOW()', (err, res) => {
-//   console.log(err, res)
-//   pool.end()
-// })
-// const client = new Client({
-//   user: 'dbuser',
-//   host: 'database.server.com',
-//   database: 'mydb',
-//   password: 'secretpassword',
-//   port: 3211,
-// })
-// client.connect()
-// client.query('SELECT NOW()', (err, res) => {
-//   console.log(err, res)
-//   client.end()
-// })
-
-// CREATE TABLE IF NOT EXISTS ratings (
-//   ratingsId bigserial,
-//   average VARCHAR (4) NOT NULL,
-//   cleanliness VARCHAR (4) NOT NULL,
-//   communication VARCHAR (4) NOT NULL,
-//   checkin VARCHAR (4) NOT NULL,
-//   location VARCHAR (4) NOT NULL,
-//   value VARCHAR (4) NOT NULL,
-//   PRIMARY KEY (ratingsId)
-// );
-
-// I HAVE TO REFACTOR OUT ACCURACY ATTRIBUTE ANYWHERE IT OCCURS IN MY CODE
 
 const postDataToRatings = (params, id, callback) => {
   console.log('HERE ARE THE PARAMS TO POST DATA');
@@ -170,9 +133,8 @@ const postDataToReviews = (params, id, callback) => {
 
 const getRatings = (allIds, callback) => {
   console.log('HERES THE allIds provided: ' + allIds);
-  allIds = allIds || '"1", "2", "3", "4", "5", "6", "7"';
   console.log('here i am in getRatings!');
-  var query = `SELECT * FROM ratings WHERE ratingsId IN (${allIds}) AND ratingsId < 10000;`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
+  var query = `SELECT * FROM ratings WHERE ratingsId IN (${allIds});`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
   console.log('heres the rating query Im about to send: ' + query);
   client.query(query, (err, res) => {
     if (err) {
@@ -185,8 +147,8 @@ const getRatings = (allIds, callback) => {
 };
 
 const getReviews = (id, callback) => {
-  id = id || '5';
-  var query = `SELECT * FROM reviews WHERE listingid = ${id} AND reviewsId < 10000;`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
+  id = id || randomNumber(9800000, 10000000);
+  var query = `SELECT * FROM reviews WHERE listingid = ${id};`; //currently, this targets reviewsid. I will need to make it work for listingId in particular
   console.log('heres the review query Im about to send: ' + query);
   client.query(query, (err, res) => {
     console.log('whats in the response to reviews request: ' + JSON.stringify(res));

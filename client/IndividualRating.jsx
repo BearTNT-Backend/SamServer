@@ -18,7 +18,6 @@ const IndividualRating = (props) => {
         <small>&nbsp; &nbsp;{props.rating.score.average}</small>
         <p hidden>test</p>
       </div>
-      {console.log('Made it to the end of IndividualRatings!')}
     </div>
   );
 

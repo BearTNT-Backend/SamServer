@@ -15,13 +15,20 @@ CREATE TABLE IF NOT EXISTS ratings (
 CREATE TABLE IF NOT EXISTS reviews (
   reviewsId bigserial,
   listingId bigserial,
+  imageid INT,
   name VARCHAR (22) NOT NULL,
   date VARCHAR (30) NOT NULL,
-  reviewBody VARCHAR (360) NOT NULL,
-  profilePic VARCHAR (200),
+  reviewBody VARCHAR (280) NOT NULL,
   ratingsId BIGINT,
   PRIMARY KEY (reviewsId),
-  FOREIGN KEY (ratingsId) REFERENCES ratings(ratingsId)
+  FOREIGN KEY (ratingsId) REFERENCES ratings(ratingsId),
+  FOREIGN KEY (imageid) REFERENCES pictures(imageid)
+);
+
+CREATE TABLE IF NOT EXISTS pictures (
+  imageid serial,
+  profilePic VARCHAR (115),
+  PRIMARY KEY (imageid)
 );
     -- ON DELETE CASCADE
     -- [ ON UPDATE { NO ACTION | CASCADE | SET NULL | SET DEFAULT} ] -- DOES THIS WORK?
