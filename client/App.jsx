@@ -9,7 +9,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ratings: ['4', '5', '3', '4', '5', '3', '4'],
+      ratings: [],
       reviews: [],
       modalReviews: [],
       searchBarEntry: '',
@@ -42,20 +42,16 @@ class App extends React.Component {
 
     axios.get(`/api/reviews-module/reviews/${id}`)
       .then(data => {
-        console.log('Data was retrieved.');
-        console.log('whats in the response to the reviews request? ' + JSON.stringify(data.data.rows));
         this.setState({
           reviews: data.data.rows,
           modalReviews: data.data.rows,
         });
       }).then(() => {
-        console.log('heres the state of reviews right before axios request to ratings: ' + this.state.reviews);
         axios.get(`/api/reviews-module/ratings/${this.state.reviews.map((review) => {
-          console.log('this is a single review in the state of reviews: ' + JSON.stringify(review));
           return review.reviewsid;
         }).toString()}`).then(data => {
-          console.log('whats in the response to the ratings request? ' + JSON.stringify(data.data.rows));
-          console.log(JSON.stringify(data.data.rows));
+          console.log('What exactly is the data from ratings request? ' + JSON.stringify(data));
+          console.log('THIS IS DATA.DATA.ROWS RIGHT BEFORE SETSTATE: ' + JSON.stringify(data.data.rows));
           this.setState({
             ratings: data.data.rows
           });
@@ -183,9 +179,7 @@ class App extends React.Component {
             percentageBar={this.percentageBar}
             resetSearch={this.resetSearch}
           />
-          {console.log('Right after PopUpModal in App!')}
         </div>
-        {console.log('Made it to the end of App!')}
       </div>
     );
   }

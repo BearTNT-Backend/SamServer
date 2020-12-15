@@ -36,3 +36,6 @@ dist/
 
 # the git configuration
 .gitconfig
+
+# newrelic file
+newrelic.js

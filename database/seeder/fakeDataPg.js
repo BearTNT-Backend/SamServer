@@ -3,8 +3,6 @@
 
 // PUT THE DATABASE ITSELF ON ITS OWN EC2
 
-const updateRatings = require('../PostgresDb.js').updateRatings;
-
 const faker = require('faker');
 // const db = require('../db.js');
 const fs = require('fs');
@@ -62,7 +60,7 @@ let currentParagraph = '';
 //RANDOM PARAGRAPH GENERATOR
 const randomParagraph = (listOfSentences) => {
   listOfSentences = listShuffle(listOfSentences);
-  paragraphLength = randomNumberBetween(3, 15);
+  paragraphLength = randomNumberBetween(2, 5);
   currentParagraph = '';
   while (paragraphLength >= 0) {
     currentParagraph += listShuffle(listOfSentences)[paragraphLength] + ' ';
@@ -86,7 +84,7 @@ var sentences = [
   'I do not regret anything!',
   'The owner has the best style.',
   'The place smelled very bad!',
-  'The owner wouldn\'t let me bring my pet bear.',
+  'They wouldn\'t let me bring my pet bear.',
   'BEST TRIP EVER!',
   'BE WARNED!',
   'I came here for my honemoon.',
@@ -100,7 +98,7 @@ var sentences = [
   'You can tell the owner really likes bears.',
   'NO INDOOR PLUMBING!!',
   'And I would do it again!',
-  'The view form the back porch was to die for.'
+  'The view from the back porch was to die for.'
 ];
 
 var names = ['Joe Buono', 'Zain Padela', 'Deb Johnson', 'Dylan Ring', 'Zach McCain', 'Alysa Shin', 'Rebecca Wiegel', 'Tre\' Moore', 'Henry Fradley', 'Connor Wilson', 'Taylor Anderson', 'John Kelly', 'Frans Larson', 'Michael Wetterauer', 'Nick Mendini', 'Ben Rasmussen', 'Sam Goldie', 'Fabian Yee', 'Matthew Morgan', 'Alex Sandoval', 'Elene Mikaberidze', 'Michael Chen', 'John Campbell', 'David Kim', 'Giovani Maccagno', 'Quentin McMillian', 'Leah Cardon', 'Seth Lassen', 'Mukhtar Bahadory', 'Daniel Lee', 'John Anderton', 'Genaro Salinas', 'Derek Warner-Reyes', 'Mitch McDermott', 'Joe Wnukoski', 'Tyler Bailey', 'Jeremy England', 'Brandon Elzy', 'Parker Stafford'];
@@ -125,6 +123,7 @@ var profilePics = [
   'https://beartnt-profile-photos.s3.us-east-2.amazonaws.com/beartnt+profile+photos/pexels-photo-5853675.jpeg'
 ];
 
+
 let reviewIndex = 0;
 let ratingsIndex = 0;
 let currentReviewCap = 0;
@@ -135,7 +134,7 @@ let createIndex;
 const createRatingsBatch = (quantity) => {
   ratingsBatch = '';
   for (createIndex = 0; createIndex < quantity; createIndex++) {
-    ratingsBatch += `${ratingsIndex.toString()}, ${randomNumberBetween(1, 5, true)}, ${randomNumberBetween(1, 5, true).toString()}, ${randomNumberBetween(1, 5, true).toString()}, ${randomNumberBetween(1, 5, true).toString()}, ${randomNumberBetween(1, 5, true).toString()}, ${randomNumberBetween(1, 5, true).toString()}, ${randomNumberBetween(1, 5, true).toString()}\n`;
+    ratingsBatch += `${ratingsIndex.toString()},${randomNumberBetween(1, 5, true)},${randomNumberBetween(1, 5, true).toString()},${randomNumberBetween(1, 5, true).toString()},${randomNumberBetween(1, 5, true).toString()},${randomNumberBetween(1, 5, true).toString()},${randomNumberBetween(1, 5, true).toString()},${randomNumberBetween(1, 5, true).toString()}\n`;
     ratingsIndex++;
   }
   return ratingsBatch;
@@ -144,106 +143,28 @@ const createRatingsBatch = (quantity) => {
 const createReviewBatch = (listId, quantity) => {
   reviewBatch = '';
   for (createIndex = 0; createIndex < quantity; createIndex++) {
-    reviewBatch += `${reviewIndex.toString()}, ${listId.toString()}, ${listShuffle(names)[createIndex]}, ${faker.date.month()} ${randomNumberBetween(2008, 2020)}, ${randomParagraph(sentences)}, ${listShuffle(profilePics)[createIndex]}, ${reviewIndex.toString()}\n`;
+    reviewBatch += `${reviewIndex.toString()}, ${listId.toString()}, ${listShuffle(names)[createIndex]}, ${faker.date.month()} ${randomNumberBetween(2008, 2020)}, ${randomParagraph(sentences)}, ${randomNumberBetween(1, 16)}, ${reviewIndex.toString()}\n`;
     reviewIndex++;
   }
   return reviewBatch;
 };
 
-// let ratingsStream = fs.createWriteStream('database/seeder/ratings.csv');
-// let reviewsStream = fs.createWriteStream('database/seeder/reviews.csv');
-
-// no real point to allListings
-
-// doruk suggestion: one thing focused on at once
-// csv for primary entries first (reviews)
-// then do entries for ratings
-// I can still write batches of reviews to give them the same id in regard to the listings
-// I have to pass in the product Id to the function doing the writing!!!
-
-// const writeTenMillionListings = (cb) => {
-//   const writeOnce = (prodId) => {
-//     dataIsLeft = true;
-//     do {
-//       console.log(prodId);
-//       if (prodId === 10000001) {
-//         reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)), cb);
-//       } else {
-//         dataIsLeft = reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)));
-//         prodId++;
-//       }
-//     } while (prodId < 10000001 && dataIsLeft);
-//     if (prodId < 10000001) {
-//       reviewsStream.once('drain', () => {
-//         console.log('Successfully drained');
-//         writeOnce(prodId);
-//       });
-//     }
-//   };
-//   writeOnce(0);
-// };
-
-// const write100Ratings = (cb) => {
-//   const writeOnce = (prodId) => {
-//     dataIsLeft = true;
-//     do {
-//       console.log(prodId);
-//       if (prodId === 101) {
-//         ratingsStream.write(createRatingsBatch(prodId, randomNumberBetween(3, 12)), cb);
-//       } else {
-//         dataIsLeft = ratingsStream.write(createRatingsBatch(prodId, randomNumberBetween(3, 12)));
-//         prodId++;
-//       }
-//     } while (prodId < 101 && dataIsLeft);
-//     if (prodId < 101) {
-//       ratingsStream.once('drain', () => {
-//         console.log('Successfully drained');
-//         writeOnce(prodId);
-//       });
-//     }
-//   };
-//   writeOnce(0);
-// };
-
-// const write100Reviews = (cb) => {
-//   const writeOnce = (prodId) => {
-//     dataIsLeft = true;
-//     do {
-//       console.log(prodId);
-//       if (prodId === 101) {
-//         reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)), cb);
-//       } else {
-//         dataIsLeft = reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)));
-//         prodId++;
-//       }
-//     } while (prodId < 101 && dataIsLeft);
-//     if (prodId < 101) {
-//       reviewsStream.once('drain', () => {
-//         console.log('Successfully drained');
-//         writeOnce(prodId);
-//       });
-//     }
-//   };
-//   writeOnce(0);
-// };
-
-// write100Reviews(() => {
-//   reviewsStream.end();
-// });
+// let ratingsStream = fs.createWriteStream('database/seeder/newRatingsIV.csv');
+let reviewsStream = fs.createWriteStream('database/seeder/newReviewsIV.csv');
 
 const writeTenMillionRatings = (cb) => {
   const writeOnce = (prodId) => {
     dataIsLeft = true;
     do {
       console.log(prodId);
-      if (prodId === 12000001) {
-        ratingsStream.write(createRatingsBatch(prodId, randomNumberBetween(3, 12)), cb);
+      if (prodId === 11500001) {
+        ratingsStream.write(createRatingsBatch(randomNumberBetween(1, 6)), cb);
       } else {
-        dataIsLeft = ratingsStream.write(createRatingsBatch(prodId, randomNumberBetween(3, 12)));
+        dataIsLeft = ratingsStream.write(createRatingsBatch(randomNumberBetween(1, 6)));
         prodId++;
       }
-    } while (prodId < 12000001 && dataIsLeft);
-    if (prodId < 12000001) {
+    } while (prodId < 11500001 && dataIsLeft);
+    if (prodId < 11500001) {
       ratingsStream.once('drain', () => {
         console.log('Successfully drained');
         writeOnce(prodId);
@@ -254,6 +175,32 @@ const writeTenMillionRatings = (cb) => {
 };
 
 // writeTenMillionRatings(() => {
+//   console.log('Process complete!');
+// });
+
+const writeTenThousandRatings = (cb) => {
+  const writeOnce = (prodId) => {
+    dataIsLeft = true;
+    do {
+      console.log(prodId);
+      if (prodId === 10001) {
+        ratingsStream.write(createRatingsBatch(randomNumberBetween(1, 6)), cb);
+      } else {
+        dataIsLeft = ratingsStream.write(createRatingsBatch(randomNumberBetween(1, 6)));
+        prodId++;
+      }
+    } while (prodId < 10001 && dataIsLeft);
+    if (prodId < 10001) {
+      ratingsStream.once('drain', () => {
+        console.log('Successfully drained');
+        writeOnce(prodId);
+      });
+    }
+  };
+  writeOnce(0);
+};
+
+// writeTenThousandRatings(() => {
 //   ratingsStream.end();
 // });
 
@@ -263,9 +210,9 @@ const writeTenMillionReviews = (cb) => {
     do {
       console.log(prodId);
       if (prodId === 10000001) {
-        reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)), cb);
+        reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(1, 6)), cb);
       } else {
-        dataIsLeft = reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(3, 12)));
+        dataIsLeft = reviewsStream.write(createReviewBatch(prodId, randomNumberBetween(1, 6)));
         prodId++;
       }
     } while (prodId < 10000001 && dataIsLeft);
@@ -279,66 +226,9 @@ const writeTenMillionReviews = (cb) => {
   writeOnce(0);
 };
 
-// writeTenMillionReviews(() => {
-//   reviewsStream.end();
-// });
-
-// const writeFiveHundredThousandRatings = (cb) => {
-//   const writeOnce = (prodId) => {
-//     dataIsLeft = true;
-//     do {
-//       console.log(prodId);
-//       if (prodId === 500001) {
-//         ratingsStream.write(createRatingsBatch(randomNumberBetween(3, 12)), cb);
-//       } else {
-//         dataIsLeft = ratingsStream.write(createRatingsBatch(randomNumberBetween(3, 12)));
-//         prodId++;
-//       }
-//     } while (prodId < 500001 && dataIsLeft);
-//     if (prodId < 500001) {
-//       ratingsStream.once('drain', () => {
-//         console.log('Successfully drained');
-//         writeOnce(prodId);
-//       });
-//     }
-//   };
-//   writeOnce(0);
-// };
-
-// writeFiveHundredThousandRatings(() => {
-//   ratingsStream.end();
-// });
-
-// for (let i = 0; i < 78737721; i++) {
-//   updateRatings({'accuracy': (Math.random() * 4 + 1).toString()});
-// }
-
-// const updateManyAccuracyScores = (cb) => {
-//   const writeOnce = (prodId) => {
-//     dataIsLeft = true;
-//     do {
-//       console.log(prodId);
-//       if (prodId === 78737721) {
-//         updateRatings({'accuracy': (Math.random() * 4 + 1).toString()}, cb);
-//       } else {
-//         dataIsLeft = updateRatings({'accuracy': (Math.random() * 4 + 1).toString()});
-//         prodId++;
-//       }
-//     } while (prodId < 78737721 && dataIsLeft);
-//     if (prodId < 78737721) {
-//       reviewsStream.once('drain', () => {
-//         console.log('Successfully drained');
-//         writeOnce(prodId);
-//       });
-//     }
-//   };
-//   writeOnce(0);
-// };
-
-// updateManyAccuracyScores(() => {
-//   console.log('Insertion complete');
-// });
-
+writeTenMillionReviews(() => {
+  console.log('Ten million written!');
+});
 
 const createAccuracyBatch = (quantity) => {
   ratingsBatch = '';
@@ -349,7 +239,7 @@ const createAccuracyBatch = (quantity) => {
   return ratingsBatch;
 };
 
-const accuracyStream = fs.createWriteStream('database/seeder/accuracy.csv');
+// const accuracyStream = fs.createWriteStream('database/seeder/accuracy.csv');
 
 const createTenMillionAccuracyBatches = () => {
   const writeOnce = (prodId) => {
@@ -373,4 +263,4 @@ const createTenMillionAccuracyBatches = () => {
   writeOnce(0);
 };
 
-createTenMillionAccuracyBatches();
+// createTenMillionAccuracyBatches();

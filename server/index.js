@@ -5,12 +5,13 @@
 
 // perhaps there are version problems with node between global and repo specific.
 
+const newRelic = require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('../database/PostgresDb.js');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = 3333;
 
 console.log(path.join(__dirname, '../public'));
 
@@ -59,7 +60,11 @@ app.get('/api/reviews-module/ratings/:ids', (req, res) => {
   console.log('About to get a set of ratings');
   console.log('what is req.params.ids? ' + req.params.ids);
   db.getRatings(req.params.ids, (err, results) => {
-    err ? console.log(err) : res.send(results);
+    if (err) {
+      console.log(err);
+    }
+    console.log('WHAT IS THE RESULTS OF GET RATINGS? ' + JSON.stringify(results));
+    res.send(results);
   });
 });
 
